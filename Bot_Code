@@ -7,7 +7,7 @@ from deep_translator import GoogleTranslator
 import sqlite3
 import csv
 
-TOKEN = '7931784043:AAHmsZ9pQ8a-HYzCkLF0xXjOdlJrYBWsx_s'
+TOKEN = 'token'
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
