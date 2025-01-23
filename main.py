@@ -12,12 +12,20 @@ TOKEN = '7931784043:AAHmsZ9pQ8a-HYzCkLF0xXjOdlJrYBWsx_s'
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
+
 def init_db():
     conn = sqlite3.connect("bot_data.db")
     cursor = conn.cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS jokes (id INTEGER PRIMARY KEY, content TEXT, type TEXT)")
+    cursor.execute("PRAGMA table_info(jokes)")
+    columns = [column[1] for column in cursor.fetchall()]
+    if "content" not in columns:
+        cursor.execute("ALTER TABLE jokes ADD COLUMN content TEXT")
+    if "type" not in columns:
+        cursor.execute("ALTER TABLE jokes ADD COLUMN type TEXT")
     conn.commit()
     conn.close()
+
 
 def add_content_to_db(content, content_type):
     conn = sqlite3.connect("bot_data.db")
@@ -41,7 +49,7 @@ def export_db_to_csv(file_path):
     rows = cursor.fetchall()
     conn.close()
 
-    with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+    with open(file_path, mode='a+', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(["id", "content", "type"])
         writer.writerows(rows)
